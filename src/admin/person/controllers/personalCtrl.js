@@ -1,6 +1,6 @@
 
-angular.module('app.Person').controller('PersonalCtrl', function(DTOptionsBuilder, DTColumnBuilder){
-
+angular.module('app.Person').controller('PersonalCtrl', function(DTOptionsBuilder, DTColumnBuilder, $http){
+    $http.get('src/api/personDatabase/personBase.json').success(function(data){console.log(data)})
 
     this.standardOptions = DTOptionsBuilder
         .fromSource('api/personDatabase/personBase.json')
