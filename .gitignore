@@ -2,7 +2,6 @@
 *.svn
 .sass-cache/
 node_modules/
-bower_components
 app/coffee/modules/locales/locale*.coffee
 *.swp
 *.swo
@@ -14,4 +13,3 @@ tmp/
 /admin
 /config
 .vscode/
-host.js
