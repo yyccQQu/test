@@ -13,7 +13,8 @@ var revFormat = require('gulp-rev-format');
 var revCollector = require('gulp-rev-collector');
 var clean = require('gulp-clean');
 var runSequence = require('gulp-run-sequence');
-
+var $ = require('gulp-load-plugins')() //执行自动加载插件,实例化
+var open = require('open')
 
 //第三方 js文件
 var scripts = require('./app.scripts.json');
@@ -77,7 +78,7 @@ gulp.task('admin:cache-templates', function() {
             root: 'views',
             module: 'app'
         }))
-        .pipe(gulp.dest(adminSource.build.cache));
+        .pipe(gulp.dest(adminSource.build.cache))
 });
 gulp.task('admin:build', ['admin:cache-templates'], function() {
     adminSource.js.src.push(adminSource.build.cache + '/app.js');
@@ -93,39 +94,48 @@ gulp.task('admin:js', function() {
     //, adminTemplateStream()
     return es.merge(gulp.src(adminSource.js.src))
         .pipe(concat('app.js'))
-        .pipe(gulp.dest(adminSource.build.cache));
+        .pipe(gulp.dest(adminSource.build.cache))
+        .pipe($.connect.reload());
 });
 //css
 gulp.task('admin:style', function() {
     err = gulp.src("src/styles/css/**/*")
         .on('error', handleError)
-        .pipe(gulp.dest(adminSource.build.cache + "/css"));
+        .pipe(gulp.dest(adminSource.build.cache + "/css"))
+        .pipe($.connect.reload());
+
     err1 = gulp.src("src/styles/fonts/**/*")
         .on('error', handleError)
-        .pipe(gulp.dest(adminSource.build.script + "/fonts"));
+        .pipe(gulp.dest(adminSource.build.script + "/fonts"))
+        .pipe($.connect.reload());
     err2 = gulp.src("src/styles/img/**/*")
         .on('error', handleError)
-        .pipe(gulp.dest(adminSource.build.script + "/img"));
+        .pipe(gulp.dest(adminSource.build.script + "/img"))
+        .pipe($.connect.reload());
     err3 = gulp.src("src/styles/sound/**/*")
         .on('error', handleError)
-        .pipe(gulp.dest(adminSource.build.script + "/sound"));
+        .pipe(gulp.dest(adminSource.build.script + "/sound"))
+        .pipe($.connect.reload());
     return err || err1 || err2 || err3;
 });
 
 gulp.task('admin:views-index', function() {
     return gulp.src(adminSource.js.index)
         .on('error', handleError)
-        .pipe(gulp.dest(adminSource.build.style));
+        .pipe(gulp.dest(adminSource.build.style))
+        .pipe($.connect.reload());
 });
 
 gulp.task('admin:views', ['admin:views-index'], function() {
     err1 = gulp.src(adminSource.js.views)
         .on('error', handleError)
-        .pipe(gulp.dest(adminSource.build.views));
+        .pipe(gulp.dest(adminSource.build.views))
+        .pipe($.connect.reload());
 
     err2 = gulp.src(adminSource.js.staticViews)
         .on('error', handleError)
-        .pipe(gulp.dest(adminSource.build.views));
+        .pipe(gulp.dest(adminSource.build.views))
+        .pipe($.connect.reload());
 
     return err1 || err2;
 });
@@ -139,10 +149,13 @@ gulp.task('admin:plugin', function() {
 
 
 gulp.task('admin:connect', function() {
-    connect.server({
-        root: './admin',
-        port: 4300
-    });
+    $.connect.server({
+    root: './admin',
+    livereload: true,
+    port: 4307
+  });
+  open('http://localhost:4307');
+
 });
 
 
@@ -163,7 +176,8 @@ gulp.task('admin:rev', function() {
         .pipe(rev())
         .pipe(gulp.dest(adminSource.build.script))
         .pipe(rev.manifest())
-        .pipe(gulp.dest(adminSource.build.rev_config));
+        .pipe(gulp.dest(adminSource.build.rev_config))
+        .pipe($.connect.reload());
 });
 
 gulp.task('admin:update-version', function() {
@@ -183,14 +197,15 @@ gulp.task('admin:update-version', function() {
             }
         }*/
         })) //- 根据 .json文件 执行文件内css名的替换
-        .pipe(gulp.dest(adminSource.build.script));
+        .pipe(gulp.dest(adminSource.build.script))
+        .pipe($.connect.reload());
 });
 
-//监听
+//监听 当页面各元素发生更改时，都会删除（del）打包好了的文件，但是没有重新打包
 gulp.task('admin:watch', function() {
     gulp.watch(adminSource.js.src, ['admin:js']);
-    gulp.watch(adminSource.js.views, ['admin:js', 'admin:style', 'admin:views']);
-    gulp.watch(adminSource.build.cache, ['admin:rev']);
+    gulp.watch(adminSource.js.views, ['admin:js', 'admin:style', 'admin:views','admin:rev']);
+    gulp.watch(adminSource.build.cache, ['admin:rev','admin:dev']);
     gulp.watch([adminSource.build.rev_config + '/*.json'], ["admin:update-version"]);
 });
 
@@ -210,7 +225,9 @@ gulp.task('admin:vendor', function() {
         gulp.src(paths)
             .pipe(uglify())
             .pipe(concat(chunkName + '.js'))
-            .pipe(gulp.dest(adminSource.build.cache));
+            .pipe(gulp.dest(adminSource.build.cache))
+            .pipe($.connect.reload());
+
     });
 
 });
