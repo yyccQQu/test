@@ -179,7 +179,7 @@ gulp.task('admin:rev', function() {
         .pipe(gulp.dest(adminSource.build.rev_config))
         .pipe($.connect.reload());
 });
-
+//console.log("热更新,需要先换js，最后改html才能OK吗，还是一起都能OK的，答案是，最后改html文件，然后就能OK了")
 gulp.task('admin:update-version', function() {
     return gulp.src([adminSource.build.rev_config + '/*.json',
             adminSource.build.script + '/**/*.css',
@@ -243,7 +243,7 @@ gulp.task('admin:dev', function(done) {
         ['admin:cleanDst'], ['admin:vendor', 'admin:style', 'admin:views-index'], ['admin:js', 'admin:views'], ['admin:rev'], ['admin:update-version'], ['admin:watch', 'admin:connect'],
         done);
 });
-
+gulp.task('default', ['admin:dev']);
 
 var swallowError = function(error) {
     console.log(error.toString());

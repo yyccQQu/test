@@ -1,6 +1,23 @@
-angular.module('app.Person').controller('PersonalCtrl', function($scope) {
+
+angular.module('app.Person').controller('PersonalCtrl', function(DTOptionsBuilder, DTColumnBuilder){
 
 
+    this.standardOptions = DTOptionsBuilder
+        .fromSource('api/tables/datatables.standard.json')
+         //Add Bootstrap compatibility
+        .withDOM("<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+            "t" +
+            "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>")
+        .withBootstrap();
+    this.standardColumns = [
+        DTColumnBuilder.newColumn('id').withClass('text-danger'),
+        DTColumnBuilder.newColumn('name'),
+        DTColumnBuilder.newColumn('state'),
+        DTColumnBuilder.newColumn('descr'),
+        DTColumnBuilder.newColumn('doto')
+        // DTColumnBuilder.newColumn('city'),
+        // DTColumnBuilder.newColumn('date')
+    ];
 
-    console.log("热更新,需要先换js，最后改html才能OK吗，还是一起都能OK的，答案是，最后改html文件，然后就能OK了")
-})
+
+});
