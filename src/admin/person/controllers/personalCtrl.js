@@ -3,7 +3,7 @@ angular.module('app.Person').controller('PersonalCtrl', function(DTOptionsBuilde
 
 
     this.standardOptions = DTOptionsBuilder
-        .fromSource('api/tables/datatables.standard.json')
+        .fromSource('api/personDatabase/personBase.json')
          //Add Bootstrap compatibility
         .withDOM("<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
             "t" +
