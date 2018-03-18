@@ -1,4 +1,4 @@
-angular.module('app.Person',['ui.router']).config(function($stateProvider){
+angular.module('app.Person',['ui.router']).config(function($stateProvider,$urlRouterProvider){
   $stateProvider
     .state('app.Person', {
       abstract: true,

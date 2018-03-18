@@ -73,7 +73,7 @@ angular.module('app').factory('httpSvc', ["$q", "$http", 'APP_CONFIG', "$LocalSt
             httpObj.initParams(params).then(function(initParams) {
                 httpObj.getHttpPromise("GET", url, initParams, timeout).then(function(data) {
                     deferred.resolve(data);
-                    console.log(url, data);
+                    console.log(url, data,"原来你在这儿");
                 }, function(data) {
                     deferred.reject(data);
                 });
