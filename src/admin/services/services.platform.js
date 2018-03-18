@@ -1,6 +1,10 @@
 angular.module("services.platform", [])
     .service("PlatformService", PlatformService);
 
+angular.module("app.Person",[])
+    .service("PlatformService", PlatformService);
+
+
 PlatformService.$inject = ['APP_CONFIG', 'httpSvc'];
 
 //管理员
